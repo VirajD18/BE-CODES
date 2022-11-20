@@ -1,27 +1,33 @@
-pragma solidity^0.6.0;
+// SPDX-License-Identifier: MIT
+pragma solidity >= 0.7.0;
 
-contract studentmanager{
-    
-    struct Student{
-        uint stud_id;
-        string name;
-        string department;
-    }
+contract Student_management{
 
-    Student[] students;
+	struct Student{
+		int stud_id;
+		string Name;
+		string Department;
+	}
 
-    function add_student(uint stud_id, string memory name, string memory department) public{
-        Student memory stud = Student(stud_id, name, department);
-        students.push(stud);
-    }
+	Student[] Students;
 
-    function get_student(uint stud_id) public view returns(string memory, string memory){
-        for (uint i =0; i<students.length; i++){
-            Student memory stud = students[i];
-            if(stud.stud_id == stud_id){
-                return (stud.name, stud.department);
-            }
-        }
-    }
+	function add_stud(int stud_id, string memory Name, string memory Department) public{
+		Student memory stud = Student(stud_id, Name, Department);
+		Students.push(stud);
+	}
 
+	function getStudent(int stud_id) public view returns(string memory, string memory){
+		for(uint i = 0; i < Students.length; i++){
+			Student memory stud = Students[i];
+			if(stud.stud_id == stud_id){
+				return(stud.Name, stud.Department);
+			}
+		}
+        return("Name Not Found", "Department Not Found");
+	}
+
+	//Fallback Function
+	fallback() external payable{
+		Students.push(Student(7, "XYZ", "Mechanical"));
+	}
 }
