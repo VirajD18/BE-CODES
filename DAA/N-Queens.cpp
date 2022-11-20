@@ -1,74 +1,80 @@
-#include <iostream>
+#include<bits/stdc++.h>
 using namespace std;
-#define N 4
-//function to print the solution
-void printSolution(int board[N][N]) 
-{ 
-    for (int i = 0; i < N; i++) { 
-        for (int j = 0; j < N; j++) 
-            cout<<board[i][j]<<" ";
-        cout<<endl; 
-    } 
-} 
 
- // function to check whether the position is safe or not 
-bool isSafe(int board[N][N], int row, int col) 
-{ 
-    int i, j; 
-    for (i = 0; i < col; i++) 
-        if (board[row][i]) 
-            return false; 
+bool isSafe(int **arr, int x, int y, int n){
+    for(int row=0;row<x;row++){
+        if(arr[row][y]==1){
+            return false;
+        }
+    }
 
-    for (i = row, j = col; i >= 0 && j >= 0; i--, j--) 
-        if (board[i][j]) 
-            return false; 
-    for (i = row, j = col; j >= 0 && i < N; i++, j--) 
-        if (board[i][j]) 
-            return false; 
-  
-    return true; 
-} 
+    int row =x;
+    int col =y;
+    while(row>=0 && col>=0){
+        if(arr[row][col]==1){
+            return false;
+        }
+        row--;
+        col--;
+    }
 
-// The function that solves the problem using backtracking 
-bool solveNQUtil(int board[N][N], int col) 
-{ 
-    if (col >= N) 
-        return true; 
-  
-   
-    for (int i = 0; i < N; i++) { 
-       //if it is safe to place the queen at position i,col -> place it
-        if (isSafe(board, i, col)) { 
-         
-            board[i][col] = 1; 
-  
-         
-            if (solveNQUtil(board, col + 1)) 
-                return true; 
+    row =x;
+    col =y;
+    while(row>=0 && col<n){
+        if(arr[row][col]==1){
+            return false;
+        }
+        row--;
+        col++;
+    }
 
-  //backtrack if the above condition is false
-            board[i][col] = 0; // BACKTRACK 
-        } 
-    } 
-  
-   
-    return false; 
-} 
+    return true;
+}
 
-// driver program to test above function 
-int main() 
-{ 
-     int board[N][N] = { { 0, 0, 0, 0 }, 
-                        { 0, 0, 0, 0 }, 
-                        { 0, 0, 0, 0 }, 
-                        { 0, 0, 0, 0 } }; 
-  
-    if (solveNQUtil(board, 0) == false) { 
-        printf("Solution does not exist"); 
-        return 0; 
-    } 
-  
-    printSolution(board); 
-    return true; 
-    return 0; 
+void printBoard(int **arr, int n){
+	for(int i=0;i<n;i++){
+        for(int j=0;j<n;j++){
+			if(arr[i][j] == 1) cout << "[Q]";
+			else cout << "[]";
+		}
+        cout << endl;
+	}
+	cout << endl;
+	cout << endl;
+}
+
+
+void nQueen(int** arr, int x, int n){
+    if(x == n){
+        printBoard(arr, n);
+		return;
+    }
+
+    for(int col=0;col<n;col++){
+        if(isSafe(arr,x,col,n)){
+            arr[x][col]=1;
+            nQueen(arr,x+1,n);
+            arr[x][col]=0;
+        }
+    }
+}
+
+
+int main(){
+    int n;
+    cin >> n;
+    
+    int **arr = new int*[n];    
+    for(int i=0;i<n;i++){
+        arr[i] = new int[n];
+        for(int j=0;j<n;j++){
+            arr[i][j]=0;
+        }
+    }
+	
+	nQueen(arr, 0, n);
+	
+	cout << "--------All possible solutions--------";
+	
+    return 0;
 }
